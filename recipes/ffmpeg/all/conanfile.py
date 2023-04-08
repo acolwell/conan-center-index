@@ -580,7 +580,6 @@ class FFMpegConan(ConanFile):
         args.append("--extra-cflags={}".format(" ".join(extra_cflags)))
         args.append("--extra-ldflags={}".format(" ".join(extra_ldflags)))
 
-        self.run("export")
         autotools.configure(args=args)
 
     def _split_and_format_options_string(self, flag_name, options_list):
@@ -625,7 +624,7 @@ class FFMpegConan(ConanFile):
         autotools.make()
 
     def package(self):
-        self.copy("LICENSE.md", dst="licenses", src=self.source_older)
+        copy(self, "LICENSE.md", dst="licenses", src=self.source_folder)
 
         autotools = Autotools(self)
         autotools.install()
