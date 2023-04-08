@@ -356,7 +356,18 @@ diff --git a/src/libOpenImageIO/CMakeLists.txt b/src/libOpenImageIO/CMakeLists.t
 index 456aab81a..eb5bb00fc 100644
 --- a/src/libOpenImageIO/CMakeLists.txt
 +++ b/src/libOpenImageIO/CMakeLists.txt
-@@ -141,10 +141,14 @@ target_link_libraries (OpenImageIO
+@@ -113,8 +113,8 @@
+                             ${OPENIMAGEIO_IMATH_DEPENDENCY_VISIBILITY}
+                                 ${OPENEXR_INCLUDES}
+                             PRIVATE
+-                                ${ROBINMAP_INCLUDES}
+-                                ${FREETYPE_INCLUDE_DIRS}
++                                ${tsl-robin-map_INCLUDE_DIRS}
++                                ${freetype_INCLUDE_DIRS}
+                             )
+ target_include_directories (OpenImageIO SYSTEM PUBLIC ${OpenCV_INCLUDES})
+ 
+@@ -141,12 +141,16 @@
              $<TARGET_NAME_IF_EXISTS:TBB::tbb>
              ${BZIP2_LIBRARIES}
              ZLIB::ZLIB
@@ -364,14 +375,19 @@ index 456aab81a..eb5bb00fc 100644
 +            Boost::filesystem Boost::thread Boost::system Boost::container
              ${CMAKE_DL_LIBS}
          )
-
+ 
+-if (FREETYPE_FOUND)
+-    target_link_libraries (OpenImageIO PRIVATE ${FREETYPE_LIBRARIES})
 +if (OpenCV_FOUND)
 +    target_link_libraries (OpenImageIO PUBLIC opencv::opencv_core opencv::opencv_imgproc opencv::opencv_videoio)
 +endif ()
 +
- if (FREETYPE_FOUND)
-     target_link_libraries (OpenImageIO PRIVATE ${FREETYPE_LIBRARIES})
++if (freetype_FOUND)
++    target_link_libraries (OpenImageIO PRIVATE ${freetype_LIBRARIES})
  endif()
+ 
+ if (WIN32)
+
 diff --git a/src/libutil/CMakeLists.txt b/src/libutil/CMakeLists.txt
 index 09b9139d0..a2d39982e 100644
 --- a/src/libutil/CMakeLists.txt
@@ -398,6 +414,6 @@ index d7f0a9582..7cfce4a35 100644
 +if (ptex_FOUND)
      add_oiio_plugin (ptexinput.cpp
 -                     LINK_LIBRARIES Ptex::Ptex_dynamic ZLIB::ZLIB
-+                     LINK_LIBRARIES Ptex::Ptex ZLIB::ZLIB
++                     LINK_LIBRARIES Ptex::Ptex_static ZLIB::ZLIB
                       DEFINITIONS "-DUSE_PTEX")
  endif ()
