@@ -28,15 +28,6 @@ diff --git a/share/cmake/modules/FindExtPackages.cmake b/share/cmake/modules/Fin
 index 86a02258..a8fed622 100644
 --- a/share/cmake/modules/FindExtPackages.cmake
 +++ b/share/cmake/modules/FindExtPackages.cmake
-@@ -26,7 +26,7 @@ set(CMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY ON CACHE BOOL
- 
- # expat
- # https://github.com/libexpat/libexpat
--find_package(expat 2.2.8 REQUIRED)
-+find_package(EXPAT 2.2.8 REQUIRED)
- 
- # yaml-cpp
- # https://github.com/jbeder/yaml-cpp
 @@ -50,9 +50,9 @@ else()
  
      # OpenEXR/IlmBase (<=2.5)
@@ -58,19 +49,6 @@ index 86a02258..a8fed622 100644
  endif()
  
  if(OCIO_BUILD_OPENFX)
-diff --git a/src/OpenColorIO/CMakeLists.txt b/src/OpenColorIO/CMakeLists.txt
-index be50b7b6..8423a099 100755
---- a/src/OpenColorIO/CMakeLists.txt
-+++ b/src/OpenColorIO/CMakeLists.txt
-@@ -211,7 +211,7 @@ target_link_libraries(OpenColorIO
- 	PUBLIC
- 		OpenColorIOHeaders
- 	PRIVATE
--		expat::expat
-+		EXPAT::EXPAT
- 		${OCIO_HALF_LIB}
- 		pystring::pystring
- 		sampleicc::sampleicc
 diff --git a/src/apps/ociobakelut/CMakeLists.txt b/src/apps/ociobakelut/CMakeLists.txt
 index 7eb1cd8a..de136073 100755
 --- a/src/apps/ociobakelut/CMakeLists.txt

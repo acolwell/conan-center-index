@@ -36,11 +36,11 @@ index e4f31196..b73396b4 100644
  if(USE_EXTERNAL_TINYXML)
      set(TINYXML_VERSION_MIN "2.6.1")
 -    find_package(TinyXML)
-+    find_package(TinyXML REQUIRED)
-+    set(TINYXML_FOUND ${TinyXML_FOUND})
++    find_package(tinyxml REQUIRED)
++    set(TINYXML_FOUND ${tinyxml_FOUND})
 +    set(TINYXML_LIBRARIES TinyXML::TinyXML)
-+    set(TINYXML_VERSION "${TinyXML_VERSION}")
-+    list(APPEND EXTERNAL_LIBRARIES ${TINYXML_LIBRARIES})
++    set(TINYXML_VERSION "${tinyxml_VERSION}")
++    list(APPEND EXTERNAL_LIBRARIES ${tinyxml_LIBRARIES})
 +
      if(TINYXML_FOUND)
          if(TINYXML_VERSION VERSION_EQUAL ${TINYXML_VERSION_MIN} OR
@@ -53,7 +53,7 @@ index e4f31196..b73396b4 100644
 +    set(YAML_CPP_INCLUDE_DIRS "${CONAN_INCLUDE_DIRS_YAML-CPP}")
 +    set(YAML_CPP_LIBRARIES yaml-cpp::yaml-cpp)
 +    set(YAML_CPP_VERSION "${yaml-cpp_VERSION}")
-+    list(APPEND EXTERNAL_LIBRARIES ${YAML_CPP_LIBRARIES})
++    list(APPEND EXTERNAL_LIBRARIES ${yaml-cpp_LIBRARIES})
 +
 +    if(0)
      include(FindPkgConfig)

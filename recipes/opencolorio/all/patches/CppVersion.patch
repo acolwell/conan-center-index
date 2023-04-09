@@ -1,0 +1,11 @@
+--- share/cmake/utils/CppVersion.cmake	2023-03-04 13:48:08.710221700 -0800
++++ share/cmake/utils/CppVersion.cmake	2023-03-04 13:46:54.617557700 -0800
+@@ -16,7 +16,7 @@
+             "CMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD} is unsupported. Supported standards are: ${SUPPORTED_CXX_STANDARDS_STR}.")
+ endif()
+ 
+-set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS "${SUPPORTED_CXX_STANDARDS}")
++#set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS "${SUPPORTED_CXX_STANDARDS}")
+ 
+ include(CheckCXXCompilerFlag)
+ 
