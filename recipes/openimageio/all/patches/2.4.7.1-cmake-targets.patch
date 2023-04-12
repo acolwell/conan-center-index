@@ -1,15 +1,15 @@
 diff --git a/CMakeLists.txt b/CMakeLists.txt
-index 4465c824c..7b23fb444 100644
+index 4465c82..7b23fb4 100644
 --- a/CMakeLists.txt
 +++ b/CMakeLists.txt
 @@ -140,7 +140,7 @@ message(STATUS "Setting Namespace to: ${PROJ_NAMESPACE_V}")
  add_definitions (-DOIIO_INTERNAL=1)
-
+ 
  list (APPEND CMAKE_MODULE_PATH
 -      "${PROJECT_SOURCE_DIR}/src/cmake/modules"
 +      #"${PROJECT_SOURCE_DIR}/src/cmake/modules"
        "${PROJECT_SOURCE_DIR}/src/cmake")
-
+ 
  include (GNUInstallDirs)
 @@ -220,7 +220,7 @@ if (OIIO_BUILD_TOOLS AND NOT BUILD_OIIOUTIL_ONLY)
      add_subdirectory (src/iinfo)
@@ -19,9 +19,9 @@ index 4465c824c..7b23fb444 100644
 +    #add_subdirectory (src/testtex)
      add_subdirectory (src/iv)
  endif ()
-
+ 
 diff --git a/src/cmake/externalpackages.cmake b/src/cmake/externalpackages.cmake
-index 48e871418..21f709b1d 100644
+index 48e8714..98e57e4 100644
 --- a/src/cmake/externalpackages.cmake
 +++ b/src/cmake/externalpackages.cmake
 @@ -48,11 +48,11 @@ endif ()
@@ -32,7 +32,7 @@ index 48e871418..21f709b1d 100644
 +        #add_definitions (-DBOOST_ALL_DYN_LINK=1)
      endif ()
  endif ()
-
+ 
 -set (Boost_COMPONENTS thread)
 +set (Boost_COMPONENTS filesystem system thread container)
  if (NOT USE_STD_FILESYSTEM)
@@ -52,7 +52,7 @@ index 48e871418..21f709b1d 100644
      set (OIIO_USING_IMATH 2)
 @@ -136,12 +136,15 @@ set (OPENIMAGEIO_CONFIG_DO_NOT_FIND_IMATH OFF CACHE BOOL
       "Exclude find_dependency(Imath) from the exported OpenImageIOConfig.cmake")
-
+ 
  # JPEG -- prefer Turbo-JPEG to regular libjpeg
 -checked_find_package (JPEGTurbo
 -                      DEFINITIONS -DUSE_JPEG_TURBO=1
@@ -69,20 +69,20 @@ index 48e871418..21f709b1d 100644
 +else ()
 +    message(FATAL_ERROR "JPEG library was not found!")
  endif ()
-
+ 
  # Pugixml setup.  Normally we just use the version bundled with oiio, but
 @@ -157,96 +160,102 @@ else ()
  endif()
-
+ 
  # From pythonutils.cmake
 -find_python()
 +#find_python()
-
-
+ 
+ 
  ###########################################################################
  # Dependencies for optional formats and features. If these are not found,
  # we will continue building, but the related functionality will be disabled.
-
+ 
 -checked_find_package (PNG)
 -
 -checked_find_package (BZip2)   # Used by ffmpeg and freetype
@@ -92,13 +92,13 @@ index 48e871418..21f709b1d 100644
 +if (USE_LIBPNG)
 +    checked_find_package (PNG)
 +endif()
-
+ 
 -checked_find_package (Freetype
 +if (USE_FREETYPE)
-+    checked_find_package (Freetype
++    checked_find_package (freetype
                     DEFINITIONS  -DUSE_FREETYPE=1 )
 +endif()
-
+ 
 -checked_find_package (OpenColorIO
 -                      DEFINITIONS  -DUSE_OCIO=1 -DUSE_OPENCOLORIO=1
 -                      # PREFER_CONFIG
@@ -120,7 +120,7 @@ index 48e871418..21f709b1d 100644
 +    checked_find_package (OpenCV 3.0
                     DEFINITIONS  -DUSE_OPENCV=1)
 +endif()
-
+ 
 -# Intel TBB
 -set (TBB_USE_DEBUG_BUILD OFF)
 -checked_find_package (TBB 2017
@@ -164,12 +164,12 @@ index 48e871418..21f709b1d 100644
 -endif ()
 +endif()
 +if (USE_LIBRAW)
-+    checked_find_package (LibRaw
++    checked_find_package (libraw
 +                          RECOMMEND_MIN 0.18
 +                          RECOMMEND_MIN_REASON "for ACES support and better camera metadata"
-+                          PRINT LibRaw_r_LIBRARIES)
++                          PRINT libraw_LIBRARIES)
 +endif()
-
+ 
 -checked_find_package (LibRaw
 -                      RECOMMEND_MIN 0.18
 -                      RECOMMEND_MIN_REASON "for ACES support and better camera metadata"
@@ -195,7 +195,7 @@ index 48e871418..21f709b1d 100644
 +                          DEPS         TBB
 +                          DEFINITIONS  -DUSE_OPENVDB=1)
 +endif()
-
+ 
 -checked_find_package (OpenJPEG VERSION_MIN 2.0
 -                      RECOMMEND_MIN 2.2
 -                      RECOMMEND_MIN_REASON "for multithreading support")
@@ -217,29 +217,29 @@ index 48e871418..21f709b1d 100644
 +if (USE_PTEX)
 +    checked_find_package (ptex PREFER_CONFIG)
 +endif()
-
+ 
 -checked_find_package (WebP)
 +if (USE_LIBWEBP)
 +    checked_find_package (WebP)
 +endif()
-
+ 
  option (USE_R3DSDK "Enable R3DSDK (RED camera) support" OFF)
 -checked_find_package (R3DSDK)  # RED camera
 +if (USE_R3DSDK)
 +    checked_find_package (R3DSDK REQUIRED)  # RED camera
 +endif ()
-
+ 
  set (NUKE_VERSION "7.0" CACHE STRING "Nuke version to target")
 -checked_find_package (Nuke)
 +if (USE_NUKE)
 +    checked_find_package (Nuke REQUIRED)
 +endif ()
-
+ 
 -checked_find_package (OpenGL)   # used for iv
 +if (USE_OPENGL)
 +    checked_find_package (OpenGL REQUIRED)   # used for iv
 +endif ()
-
+ 
  # Qt -- used for iv
  set (qt5_modules Core Gui Widgets)
 @@ -254,7 +263,9 @@ if (OPENGL_FOUND)
@@ -276,9 +276,9 @@ index 48e871418..21f709b1d 100644
 -    checked_find_package (Robinmap REQUIRED)
 +    checked_find_package (tsl-robin-map REQUIRED)
  endmacro()
-
-
-@@ -321,7 +321,7 @@
+ 
+ 
+@@ -321,7 +332,7 @@ macro (find_or_download_fmt)
      # If an external copy wasn't found and we requested that missing
      # packages be built, or we we are forcing a local copy to be built, then
      # download and build it.
@@ -287,15 +287,14 @@ index 48e871418..21f709b1d 100644
          message (STATUS "Downloading local fmtlib/fmt")
          set (FMT_INSTALL_DIR "${PROJECT_SOURCE_DIR}/ext/fmt")
          set (FMT_GIT_REPOSITORY "https://github.com/fmtlib/fmt")
-
 diff --git a/src/ffmpeg.imageio/CMakeLists.txt b/src/ffmpeg.imageio/CMakeLists.txt
-index 58402060e..5dea82369 100644
+index 5840206..5dea823 100644
 --- a/src/ffmpeg.imageio/CMakeLists.txt
 +++ b/src/ffmpeg.imageio/CMakeLists.txt
 @@ -2,13 +2,11 @@
  # SPDX-License-Identifier: BSD-3-Clause
  # https://github.com/OpenImageIO/oiio
-
+ 
 -if (FFmpeg_FOUND)
 +if (ffmpeg_FOUND)
      add_oiio_plugin (ffmpeginput.cpp
@@ -309,13 +308,44 @@ index 58402060e..5dea82369 100644
  else()
      message (STATUS "FFmpeg not found: ffmpeg plugin will not be built")
  endif()
+diff --git a/src/fonts/CMakeLists.txt b/src/fonts/CMakeLists.txt
+index d33de60..44c9dda 100644
+--- a/src/fonts/CMakeLists.txt
++++ b/src/fonts/CMakeLists.txt
+@@ -4,7 +4,7 @@
+ 
+ file (GLOB public_fonts "*/*.ttf")
+ 
+-if (INSTALL_FONTS AND FREETYPE_FOUND)
++if (INSTALL_FONTS AND freetype_FOUND)
+     install (FILES ${public_fonts}
+              DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/fonts/OpenImageIO
+              COMPONENT fonts)
+diff --git a/src/heif.imageio/CMakeLists.txt b/src/heif.imageio/CMakeLists.txt
+index ece763a..dfef390 100644
+--- a/src/heif.imageio/CMakeLists.txt
++++ b/src/heif.imageio/CMakeLists.txt
+@@ -2,10 +2,10 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # https://github.com/OpenImageIO/oiio
+ 
+-if (Libheif_FOUND)
++if (libheif_FOUND)
+     add_oiio_plugin (heifinput.cpp heifoutput.cpp
+-                     INCLUDE_DIRS ${LIBHEIF_INCLUDES}
+-                     LINK_LIBRARIES ${LIBHEIF_LIBRARIES}
++                     INCLUDE_DIRS ${libheif_INCLUDE_DIRS}
++                     LINK_LIBRARIES ${libheif_LIBRARIES}
+                      DEFINITIONS "-DUSE_HEIF=1")
+ else ()
+     message (WARNING "heif plugin will not be built")
 diff --git a/src/include/CMakeLists.txt b/src/include/CMakeLists.txt
-index 52b0936a6..611eadb4e 100644
+index 52b0936..611eadb 100644
 --- a/src/include/CMakeLists.txt
 +++ b/src/include/CMakeLists.txt
 @@ -65,14 +65,15 @@ install (FILES ${detail_headers}
           COMPONENT developer)
-
+ 
  if (INTERNALIZE_FMT OR OIIO_USING_FMT_LOCAL)
 +    set(FMT_INCLUDES "${fmt_INCLUDE_DIR}")
      set (fmt_headers
@@ -332,41 +362,44 @@ index 52b0936a6..611eadb4e 100644
      set (fmt_headers
           ${CMAKE_BINARY_DIR}/include/OpenImageIO/detail/fmt/format.h
 diff --git a/src/include/OpenImageIO/detail/fmt.h b/src/include/OpenImageIO/detail/fmt.h
-index f0cfcb300..1958d824e 100644
+index f0cfcb3..1958d82 100644
 --- a/src/include/OpenImageIO/detail/fmt.h
 +++ b/src/include/OpenImageIO/detail/fmt.h
 @@ -38,9 +38,9 @@ OIIO_PRAGMA_WARNING_PUSH
  #    pragma GCC diagnostic ignored "-Wtautological-constant-compare"
  #endif
-
+ 
 -#include <OpenImageIO/detail/fmt/format.h>
 -#include <OpenImageIO/detail/fmt/ostream.h>
 -#include <OpenImageIO/detail/fmt/printf.h>
 +#include <fmt/ostream.h>
 +#include <fmt/format.h>
 +#include <fmt/printf.h>
-
+ 
  OIIO_PRAGMA_WARNING_POP
-
+ 
 diff --git a/src/jpeg2000.imageio/CMakeLists.txt b/src/jpeg2000.imageio/CMakeLists.txt
-index 1f47269bf..85b90d66a 100644
+index 1f47269..48483b2 100644
 --- a/src/jpeg2000.imageio/CMakeLists.txt
 +++ b/src/jpeg2000.imageio/CMakeLists.txt
-@@ -4,8 +4,7 @@
-
- if (OPENJPEG_FOUND)
+@@ -2,10 +2,9 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # https://github.com/OpenImageIO/oiio
+ 
+-if (OPENJPEG_FOUND)
++if (OpenJPEG_FOUND)
      add_oiio_plugin (jpeg2000input.cpp jpeg2000output.cpp
 -                     INCLUDE_DIRS ${OPENJPEG_INCLUDES}
 -                     LINK_LIBRARIES ${OPENJPEG_LIBRARIES}
-+                     LINK_LIBRARIES OpenJPEG::OpenJPEG
++                     LINK_LIBRARIES openjp2
                       DEFINITIONS "-DUSE_OPENJPEG")
  else()
      message (WARNING "Jpeg-2000 plugin will not be built")
 diff --git a/src/libOpenImageIO/CMakeLists.txt b/src/libOpenImageIO/CMakeLists.txt
-index 456aab81a..eb5bb00fc 100644
+index 456aab8..a57587a 100644
 --- a/src/libOpenImageIO/CMakeLists.txt
 +++ b/src/libOpenImageIO/CMakeLists.txt
-@@ -113,8 +113,8 @@
+@@ -113,8 +113,8 @@ target_include_directories (OpenImageIO
                              ${OPENIMAGEIO_IMATH_DEPENDENCY_VISIBILITY}
                                  ${OPENEXR_INCLUDES}
                              PRIVATE
@@ -377,7 +410,7 @@ index 456aab81a..eb5bb00fc 100644
                              )
  target_include_directories (OpenImageIO SYSTEM PUBLIC ${OpenCV_INCLUDES})
  
-@@ -141,12 +141,16 @@
+@@ -141,12 +141,16 @@ target_link_libraries (OpenImageIO
              $<TARGET_NAME_IF_EXISTS:TBB::tbb>
              ${BZIP2_LIBRARIES}
              ZLIB::ZLIB
@@ -397,9 +430,8 @@ index 456aab81a..eb5bb00fc 100644
  endif()
  
  if (WIN32)
-
 diff --git a/src/libutil/CMakeLists.txt b/src/libutil/CMakeLists.txt
-index 09b9139d0..a2d39982e 100644
+index 09b9139..a2d3998 100644
 --- a/src/libutil/CMakeLists.txt
 +++ b/src/libutil/CMakeLists.txt
 @@ -17,8 +17,7 @@ target_link_libraries (OpenImageIO_Util
@@ -413,13 +445,13 @@ index 09b9139d0..a2d39982e 100644
              ${CMAKE_DL_LIBS}
          )
 diff --git a/src/ptex.imageio/CMakeLists.txt b/src/ptex.imageio/CMakeLists.txt
-index d7f0a9582..7cfce4a35 100644
+index d7f0a95..d41cb75 100644
 --- a/src/ptex.imageio/CMakeLists.txt
 +++ b/src/ptex.imageio/CMakeLists.txt
 @@ -2,8 +2,8 @@
  # SPDX-License-Identifier: BSD-3-Clause
  # https://github.com/OpenImageIO/oiio
-
+ 
 -if (Ptex_FOUND)
 +if (ptex_FOUND)
      add_oiio_plugin (ptexinput.cpp
@@ -427,3 +459,38 @@ index d7f0a9582..7cfce4a35 100644
 +                     LINK_LIBRARIES Ptex::Ptex_static ZLIB::ZLIB
                       DEFINITIONS "-DUSE_PTEX")
  endif ()
+diff --git a/src/raw.imageio/CMakeLists.txt b/src/raw.imageio/CMakeLists.txt
+index 9301dd6..15886cc 100644
+--- a/src/raw.imageio/CMakeLists.txt
++++ b/src/raw.imageio/CMakeLists.txt
+@@ -2,11 +2,11 @@
+ # SPDX-License-Identifier: BSD-3-Clause
+ # https://github.com/OpenImageIO/oiio
+ 
+-if (LIBRAW_FOUND)
++if (libraw_FOUND)
+     add_oiio_plugin (rawinput.cpp
+-                     INCLUDE_DIRS ${LibRaw_INCLUDE_DIR}
+-                     LINK_LIBRARIES ${LibRaw_r_LIBRARIES}
+-                     DEFINITIONS "-DUSE_LIBRAW=1" ${LibRaw_r_DEFINITIONS})
++                     INCLUDE_DIRS ${libraw_INCLUDE_DIR}
++                     LINK_LIBRARIES ${libraw_LIBRARIES}
++                     DEFINITIONS "-DUSE_LIBRAW=1" ${libraw_DEFINITIONS})
+ else ()
+     message (WARNING "Raw plugin will not be built")
+ endif ()
+diff --git a/src/webp.imageio/CMakeLists.txt b/src/webp.imageio/CMakeLists.txt
+index 4fbaeb0..d1aaaee 100644
+--- a/src/webp.imageio/CMakeLists.txt
++++ b/src/webp.imageio/CMakeLists.txt
+@@ -4,8 +4,8 @@
+ 
+ if (WebP_FOUND)
+     add_oiio_plugin (webpinput.cpp webpoutput.cpp
+-                     INCLUDE_DIRS ${WEBP_INCLUDES}
+-                     LINK_LIBRARIES ${WEBP_LIBRARIES}
++                     INCLUDE_DIRS ${WebP_INCLUDE_DIRS}
++                     LINK_LIBRARIES ${WebP_LIBRARIES}
+                      DEFINITIONS "-DUSE_WEBP=1")
+ else ()
+     message (STATUS "WebP plugin will not be built")
