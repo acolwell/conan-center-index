@@ -1,0 +1,11 @@
+diff -ru libs/stacktrace/build/Jamfile.v2 libs/stacktrace/build/Jamfile.v2
+--- libs/stacktrace/build/Jamfile.v2	2023-04-12 17:24:38.917584100 -0700
++++ libs/stacktrace/build/Jamfile.v2	2023-04-12 17:52:18.809051400 -0700
+@@ -75,6 +75,7 @@
+     <library>backtrace
+     <link>shared:<define>BOOST_STACKTRACE_DYN_LINK=1
+     [ check-target-builds ../build//libbacktrace : : <build>no ]
++    <target-os>windows:<build>no
+   : # default build
+   : # usage-requirements
+     #<link>shared:<define>BOOST_STACKTRACE_DYN_LINK=1
