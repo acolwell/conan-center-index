@@ -31,8 +31,9 @@ class SysConfigOpenGLConan(ConanFile):
         apt = package_manager.Apt(self)
         apt.install_substitutes(["libgl-dev"], ["libgl1-mesa-dev"], update=True, check=True)
 
-        pacman = package_manager.PacMan(self)
-        pacman.install(["libglvnd"], update=True, check=True)
+        if self.settings.os != "Windows":
+            pacman = package_manager.PacMan(self)
+            pacman.install(["libglvnd"], update=True, check=True)
 
         zypper = package_manager.Zypper(self)
         zypper.install(["Mesa-libGL-devel", "glproto-devel"], update=True, check=True)
