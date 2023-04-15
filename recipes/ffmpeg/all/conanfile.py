@@ -547,6 +547,10 @@ class FFMpegConan(ConanFile):
             args.append("--ranlib={}".format(envvars.get("RANLIB")))
         if envvars.get("STRIP"):
             args.append("--strip={}".format(envvars.get("STRIP")))
+        if envvars.get("PKG_CONFIG"):
+            args.append("--pkg-config={}".format(envvars.get("PKG_CONFIG")))
+        else:
+            args.append("--pkg-config=pkgconf")
         extra_cflags = []
         extra_ldflags = []
         if is_apple_os(self) and self.settings.os.version:
@@ -555,7 +559,6 @@ class FFMpegConan(ConanFile):
             extra_ldflags.append(tools.apple_deployment_target_flag(
                 self.settings.os, self.settings.os.version))
         if is_msvc(self):
-            args.append("--pkg-config={}".format(envvars.get("PKG_CONFIG")))
             args.append("--toolchain=msvc")
             if not check_min_vs(self, "190", raise_invalid=False):
                 # Visual Studio 2013 (and earlier) doesn't support "inline" keyword for C (only for C++)
