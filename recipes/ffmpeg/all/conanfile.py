@@ -325,7 +325,9 @@ class FFMpegConan(ConanFile):
     def build_requirements(self):
         if self.settings.arch in ("x86", "x86_64"):
             self.tool_requires("yasm/1.3.0")
-        self.build_requires("pkgconf/1.9.3")
+        # TODO: Change to version above 1.9.4 that has library order bug fixed.
+        # https://github.com/pkgconf/pkgconf/issues/268
+        self.build_requires("pkgconf/1.7.4")
 
     def source(self):
         get(self, **self.conan_data["sources"][self.version],
