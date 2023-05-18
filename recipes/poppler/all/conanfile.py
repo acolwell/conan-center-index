@@ -255,7 +255,7 @@ class PopplerConan(ConanFile):
     def package_info(self):
         self.cpp_info.components["libpoppler"].libs = ["poppler"]
         self.cpp_info.components["libpoppler"].includedirs.append(os.path.join("include", "poppler"))
-        self.cpp_info.components["libpoppler"].names["pkg_config"] = "poppler"
+        self.cpp_info.components["libpoppler"].set_property("pkg_config_name", "poppler")
         if not self.options.shared:
             self.cpp_info.components["libpoppler"].defines = ["POPPLER_STATIC"]
 
@@ -287,24 +287,25 @@ class PopplerConan(ConanFile):
         if self.options.cpp:
             self.cpp_info.components["libpoppler-cpp"].libs = ["poppler-cpp"]
             self.cpp_info.components["libpoppler-cpp"].includedirs.append(os.path.join("include", "poppler", "cpp"))
-            self.cpp_info.components["libpoppler-cpp"].names["pkg_config"] = "poppler-cpp"
+            self.cpp_info.components["libpoppler-cpp"].set_property("pkg_config_name", "poppler-cpp")
             self.cpp_info.components["libpoppler-cpp"].requires = ["libpoppler"]
             if self.options.get_safe("with_libiconv"):
                 self.cpp_info.components["libpoppler-cpp"].requires.append("libiconv::libiconv")
 
         if self.options.splash:
             self.cpp_info.components["libpoppler-splash"].libs = []
-            self.cpp_info.components["libpoppler-splash"].names["pkg_config"] = "poppler-splash"
+            self.cpp_info.components["libpoppler-splash"].set_property("pkg_config_name", "poppler-splash")
             self.cpp_info.components["libpoppler-splash"].requires = ["libpoppler", "boost::boost"]  # FIXME: should be boost::headers, see https://github.com/conan-io/conan-center-index/pull/2097
 
         if self.options.with_cairo:
             self.cpp_info.components["libpoppler-cairo"].libs = []
-            self.cpp_info.components["libpoppler-cairo"].names["pkg_config"] = "poppler-cairo"
+            self.cpp_info.components["libpoppler-cairo"].set_property("pkg_config_name", "poppler-cairo")
             self.cpp_info.components["libpoppler-cairo"].requires = ["libpoppler", "cairo::cairo"]
 
         if self.options.get_safe("with_glib"):
             self.cpp_info.components["libpoppler-glib"].libs = ["poppler-glib"]
-            self.cpp_info.components["libpoppler-glib"].names["pkg_config"] = "poppler-glib"
+            self.cpp_info.components["libpoppler-glib"].set_property("pkg_config_name", "poppler-glib")
+            self.cpp_info.components["libpoppler-glib"].includedirs = ["include/poppler/glib"]
             self.cpp_info.components["libpoppler-glib"].requires = ["libpoppler-cairo", "glib::glib"]
             if self.options.get_safe("with_gtk"):
                 self.cpp_info.components["libpoppler-glib"].requires.append("gtk::gtk")
@@ -314,7 +315,7 @@ class PopplerConan(ConanFile):
         if self.options.with_qt:
             qt_major = tools.Version(self.deps_cpp_info["qt"].version).major
             self.cpp_info.components["libpoppler-qt"].libs = ["poppler-qt{}".format(qt_major)]
-            self.cpp_info.components["libpoppler-qt"].names["pkg_config"] = "poppler-qt{}".format(qt_major)
+            self.cpp_info.components["libpoppler-qt"].set_property("pkg_config_name", "poppler-qt{}".format(qt_major))
             self.cpp_info.components["libpoppler-qt"].requires = ["libpoppler", "qt::qtCore", "qt::qtGui", "qt::qtWidgets"]
 
         datadir = self.deps_user_info["poppler-data"].datadir

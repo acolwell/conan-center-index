@@ -1,5 +1,6 @@
 from conans import ConanFile, tools, Meson, VisualStudioBuildEnvironment
 from conans.errors import ConanInvalidConfiguration
+from conan.tools.files import apply_conandata_patches, export_conandata_patches
 import os
 import shutil
 import glob
@@ -50,7 +51,10 @@ class GobjectIntrospectionConan(ConanFile):
             self.build_requires("bison/3.7.6")
 
     def requirements(self):
-        self.requires("glib/2.73.0")
+        self.requires("glib/2.76.0")
+
+    def export_sources(self):
+        export_conandata_patches(self)
 
     def source(self):
         tools.get(**self.conan_data["sources"][self.version], strip_root=True, destination=self._source_subfolder)
@@ -70,6 +74,8 @@ class GobjectIntrospectionConan(ConanFile):
         return meson
 
     def build(self):
+        apply_conandata_patches(self)
+
         tools.replace_in_file(
             os.path.join(self._source_subfolder, "meson.build"),
             "subdir('tests')",
@@ -102,7 +108,7 @@ class GobjectIntrospectionConan(ConanFile):
             os.unlink(pdb_file)
 
     def package_info(self):
-        self.cpp_info.names["pkg_config"] = "gobject-introspection-1.0"
+        self.cpp_info.set_property("pkg_config_name", "gobject-introspection-1.0")
         self.cpp_info.libs = ["girepository-1.0"]
         self.cpp_info.includedirs.append(
             os.path.join("include", "gobject-introspection-1.0")

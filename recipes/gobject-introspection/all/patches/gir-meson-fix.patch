@@ -1,0 +1,12 @@
+diff -ru source_subfolder-orig/gir/meson.build source_subfolder/gir/meson.build
+--- source_subfolder-orig/gir/meson.build	2023-05-16 17:21:11.395905597 -0700
++++ source_subfolder/gir/meson.build	2023-05-16 17:23:06.321351566 -0700
+@@ -412,7 +412,7 @@
+   dep_type = giounix_dep.type_name()
+   if dep_type == 'pkgconfig'
+     gio_command += ['--pkg=gio-unix-2.0']
+-    giounix_includedir = get_option('gi_cross_pkgconfig_sysroot_path') + join_paths(giounix_dep.get_variable(pkgconfig: 'includedir'), 'gio-unix-2.0')
++    giounix_includedir = get_option('gi_cross_pkgconfig_sysroot_path') + giounix_dep.get_variable(pkgconfig: 'includedir')
+     # Get the installed gio-unix header list
+     ret = run_command(python, '-c', globber.format(join_paths(giounix_includedir, 'gio', '*.h')))
+     if ret.returncode() != 0
