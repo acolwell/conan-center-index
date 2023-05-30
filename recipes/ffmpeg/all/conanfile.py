@@ -327,6 +327,7 @@ class FFMpegConan(ConanFile):
             # TODO: Change to version above 1.9.4 that has library order bug fixed.
             # https://github.com/pkgconf/pkgconf/issues/268
             self.tool_requires("pkgconf/1.7.4")
+
         if self._settings_build.os == "Windows":
             self.win_bash = True
             if not self.conf.get("tools.microsoft.bash:path", check_type=str):
