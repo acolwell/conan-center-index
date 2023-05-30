@@ -1,0 +1,12 @@
+diff -ur a/libheif/heif_colorconversion.cc b/libheif/heif_colorconversion.cc
+--- a/libheif/heif_colorconversion.cc	2023-05-30 10:58:01.916677900 -0700
++++ b/libheif/heif_colorconversion.cc	2023-05-30 11:01:50.423762700 -0700
+@@ -1866,7 +1866,7 @@
+     return nullptr;
+   }
+ 
+-  const uint8_t* in_y, * in_a;
++  const uint8_t* in_y, * in_a = nullptr;
+   int in_y_stride = 0, in_a_stride;
+ 
+   uint8_t* out_p;

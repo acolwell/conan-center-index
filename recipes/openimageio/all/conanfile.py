@@ -73,11 +73,11 @@ class OpenImageIOConan(ConanFile):
 
     def config_options(self):
         if self.settings.os == "Windows":
-            del self.options.fPIC
+            self.options.rm_safe("fPIC")
 
     def configure(self):
         if self.options.shared:
-            del self.options.fPIC
+            self.options.rm_safe("fPIC")
 
     def requirements(self):
         # Required libraries
@@ -118,9 +118,9 @@ class OpenImageIOConan(ConanFile):
         if self.options.with_giflib:
             self.requires("giflib/5.2.1")
         if self.options.with_libheif:
-            self.requires("libheif/1.12.0")
+            self.requires("libheif/1.13.0")
         if self.options.with_raw:
-            self.requires("libraw/0.20.2")
+            self.requires("libraw/0.21.1")
         if self.options.with_openjpeg:
             self.requires("openjpeg/2.5.0")
         if self.options.with_openvdb:
