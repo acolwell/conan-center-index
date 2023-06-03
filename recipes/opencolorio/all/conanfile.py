@@ -43,7 +43,7 @@ class OpenColorIOConan(ConanFile):
             self.options.rm_safe("fPIC")
 
     def requirements(self):
-        self.requires("expat/2.4.8")
+        self.requires("expat/2.5.0")
         self.requires("yaml-cpp/0.7.0")
         if Version(self.version) < "2.0.0":
             self.requires("openexr/2.5.7")

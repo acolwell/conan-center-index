@@ -90,13 +90,13 @@ class CairoConan(ConanFile):
             if self.options.with_xlib or self.options.with_xlib_xrender or self.options.with_xcb:
                 self.requires("xorg/system")
         if self.options.get_safe("with_glib", True):
-            self.requires("glib/2.76.1")
+            self.requires("glib/2.76.3")
         self.requires("zlib/1.2.13")
         self.requires("pixman/0.40.0")
         self.requires("libpng/1.6.39")
 
     def package_id(self):
-        if self.options.get_safe("with_glib") and not self.dependencies["glib"].options.shared:
+        if self.info.options.get_safe("with_glib") and not self.dependencies["glib"].options.shared:
             self.info.requires["glib"].full_package_mode()
 
     def validate(self):

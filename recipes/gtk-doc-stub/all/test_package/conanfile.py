@@ -1,4 +1,9 @@
-from conans import AutoToolsBuildEnvironment, ConanFile, tools
+from conan import ConanFile
+from conan.tools.env import Environment, VirtualBuildEnv
+from conan.tools.files import copy, get
+from conan.tools.gnu import Autotools, AutotoolsDeps, AutotoolsToolchain
+from conan.tools.layout import basic_layout
+
 import os
 import shutil
 
@@ -8,25 +13,36 @@ class TestPackageConan(ConanFile):
     exports_sources = "configure.ac",
     test_type = "explicit"
 
-    @property
-    def _settings_build(self):
-        return getattr(self, "settings_build", self.settings)
 
     def requirements(self):
         self.requires(self.tested_reference_str)
 
     def build_requirements(self):
-        self.build_requires(self.tested_reference_str)
-        if self._settings_build.os == "Windows" and not tools.get_env("CONAN_BASH_PATH"):
-            self.build_requires("msys2/cci.latest")
+        if getattr(self, "settings_build", self.settings).os == "Windows":
+            self.win_bash = True
+            if not self.conf.get("tools.microsoft.bash:path", check_type=str):
+                self.build_requires("msys2/cci.latest")
         self.build_requires("automake/1.16.4")
+
+    def layout(self):
+        basic_layout(self)
+
+    def generate(self):
+        ms = VirtualBuildEnv(self)
+        ms.generate()
+
+        deps = AutotoolsDeps(self)
+        deps.generate()
+
+        tc = AutotoolsToolchain(self)
+        tc.generate()
 
     def build(self):
         for src in self.exports_sources:
             shutil.copy(os.path.join(self.source_folder, src),
                         os.path.join(self.build_folder, src))
-        self.run("{} -fiv".format(tools.get_env("AUTORECONF")), run_environment=True, win_bash=tools.os_info.is_windows)
-        autotools = AutoToolsBuildEnvironment(self, win_bash=tools.os_info.is_windows)
+        autotools = Autotools(self)
+        autotools.autoreconf(args=["-fiv"])
         args = [
             "--enable-option-checking=fatal",
             "--enable-gtk-doc=no",
@@ -34,4 +50,4 @@ class TestPackageConan(ConanFile):
         autotools.configure(args=args)
 
     def test(self):
-        self.run("gtkdocize --copy", run_environment=True, win_bash=tools.os_info.is_windows)
+        self.run("gtkdocize --copy", env="conanrun")
