@@ -54,7 +54,7 @@ index d1d3653..dadcd02 100644
 -  set(poppler_LIBS ${poppler_LIBS} ${FONTCONFIG_LIBRARIES})
 +set(poppler_LIBS CONAN_PKG::freetype)
 +if(WITH_FONTCONFIGURATION_FONTCONFIG)
-+  set(poppler_LIBS ${poppler_LIBS} CONAN_PKG::fontconfig)
++  set(poppler_LIBS ${poppler_LIBS} fontconfig::fontconfig)
  endif()
  
 -if(JPEG_FOUND)
@@ -63,7 +63,7 @@ index d1d3653..dadcd02 100644
      poppler/DCTStream.cc
    )
 -  set(poppler_LIBS ${poppler_LIBS} ${JPEG_LIBRARIES})
-+  set(poppler_LIBS ${poppler_LIBS} CONAN_PKG::libjpeg)
++  set(poppler_LIBS ${poppler_LIBS} libjpeg::libjpeg)
  endif()
  if(ENABLE_ZLIB)
    set(poppler_SRCS ${poppler_SRCS}
@@ -72,7 +72,7 @@ index d1d3653..dadcd02 100644
    )
    if(${CMAKE_VERSION} VERSION_LESS "3.12.0")
 -    set(poppler_LIBS ${poppler_LIBS} ${CURL_LIBRARIES})
-+    set(poppler_LIBS ${poppler_LIBS} CONAN_PKG::libcurl)
++    set(poppler_LIBS ${poppler_LIBS} libcurl::libcurl)
    else()
      set(poppler_LIBS ${poppler_LIBS} CURL::libcurl)
    endif()
@@ -86,7 +86,7 @@ index d1d3653..dadcd02 100644
      poppler/JPEG2000Stream.cc
    )
 -  set(poppler_LIBS ${poppler_LIBS} openjp2)
-+  set(poppler_LIBS ${poppler_LIBS} CONAN_PKG::openjpeg)
++  set(poppler_LIBS ${poppler_LIBS} openjpeg::openjpeg)
  else ()
    set(poppler_SRCS ${poppler_SRCS}
      poppler/JPXStream.cc
@@ -94,7 +94,7 @@ index d1d3653..dadcd02 100644
  endif()
  if(USE_CMS)
 -  set(poppler_LIBS ${poppler_LIBS} ${LCMS2_LIBRARIES})
-+  set(poppler_LIBS ${poppler_LIBS} CONAN_PKG::lcms)
++  set(poppler_LIBS ${poppler_LIBS} lcms::lcms)
  endif()
  if(WIN32)
    # use clean APIs
@@ -129,7 +129,7 @@ index 2ec91d0..ec2c80b 100644
 +++ cpp/CMakeLists.txt
 @@ -34,1 +34,1 @@
 -target_link_libraries(poppler-cpp poppler ${ICONV_LIBRARIES})
-+target_link_libraries(poppler-cpp poppler CONAN_PKG::libiconv)
++target_link_libraries(poppler-cpp poppler libiconv::libiconv)
 diff --git a/qt5/src/CMakeLists.txt b/qt5/src/CMakeLists.txt
 index d80c81f..01d3e3e 100644
 --- a/qt5/src/CMakeLists.txt
@@ -139,7 +139,7 @@ index d80c81f..01d3e3e 100644
      set_target_properties(poppler-qt5 PROPERTIES SUFFIX "-${POPPLER_QT5_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  endif()
 -target_link_libraries(poppler-qt5 poppler Qt5::Core Qt5::Gui Qt5::Xml ${FREETYPE_LIBRARIES})
-+target_link_libraries(poppler-qt5 poppler Qt5::Core Qt5::Gui Qt5::Xml CONAN_PKG::freetype)
++target_link_libraries(poppler-qt5 poppler Qt5::Core Qt5::Gui Qt5::Xml freetype::freetype)
  if(MSVC)
  target_link_libraries(poppler-qt5 poppler ${poppler_LIBS})
  endif()
@@ -152,7 +152,7 @@ index f30b1a8..6337173 100644
      set_target_properties(poppler-qt6 PROPERTIES SUFFIX "-${POPPLER_QT6_SOVERSION}${CMAKE_SHARED_LIBRARY_SUFFIX}")
  endif()
 -target_link_libraries(poppler-qt6 poppler Qt6::Core Qt6::Gui ${FREETYPE_LIBRARIES})
-+target_link_libraries(poppler-qt6 poppler Qt6::Core Qt6::Gui CONAN_PKG::freetype})
++target_link_libraries(poppler-qt6 poppler Qt6::Core Qt6::Gui freetype::freetype})
  if(MSVC)
  target_link_libraries(poppler-qt6 poppler ${poppler_LIBS})
  endif()
