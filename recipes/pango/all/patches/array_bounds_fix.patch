@@ -1,0 +1,15 @@
+diff -ur a/pango/pango-language.c b/pango/pango-language.c
+--- a/pango/pango-language.c	2023-06-01 16:54:40.515860300 -0700
++++ b/pango/pango-language.c	2023-06-01 18:26:18.429827900 -0700
+@@ -514,8 +514,11 @@
+ 				 num_records,
+ 				 record_size);
+ 
++#pragma GCC diagnostic push
++#pragma GCC diagnostic ignored "-Warray-bounds"
+   if (cache)
+     *cache = result;
++#pragma GCC diagnostic pop
+ 
+   return result;
+ }
