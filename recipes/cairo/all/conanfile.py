@@ -78,6 +78,12 @@ class CairoConan(ConanFile):
         self.settings.rm_safe("compiler.cppstd")
         self.settings.rm_safe("compiler.libcxx")
 
+        if self.options.shared:
+            if self.options.get_safe("with_freetype", True):
+                self.options["glib"].shared = True
+            if self.options.get_safe("with_glib", True):
+                self.options["glib"].shared = True
+
     def layout(self):
         basic_layout(self, src_folder="src")
 
