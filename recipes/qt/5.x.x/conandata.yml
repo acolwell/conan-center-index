@@ -48,3 +48,8 @@ patches:
       "patch_file": "patches/ffmpeg-x86-optimization.patch"
       "patch_source": "https://packages.ubuntu.com/source/focal-updates/qtwebengine-opensource-src"
       "patch_type": "portability"
+    - "base_path": "qt5/qtbase"
+      "patch_description": "Fix required for pyside2 to build"
+      "patch_source": "https://github.com/OpenMandrivaAssociation/qt5-qtbase/commit/20f97a4bfb95658bc35c3292ac11e52c335cc1e9"
+      "patch_file": "patches/qtbase-5.15.9-work-around-pyside2-brokenness.patch"
+      "strip": 1
