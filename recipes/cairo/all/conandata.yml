@@ -43,3 +43,9 @@ patches:
       patch_type: "backport"
       patch_description: "use encoding=utf-8 when reading/writing files in helper script"
       patch_source: "https://gitlab.freedesktop.org/cairo/cairo/-/commit/9732f4e80f906fab85b97ae55ee44bfd3ee4945e"
+
+  "1.18.0":
+    - patch_file: "patches/cairo-1.18.0-fix_alloc_undefined-backport.patch"
+      patch_type: "backport"
+      patch_description: "Fix alloca undefined with MSVC"
+      patch_source: "https://gitlab.freedesktop.org/cairo/cairo/-/commit/29592a331c947737e688d095f5f8a2ee77b666f5"

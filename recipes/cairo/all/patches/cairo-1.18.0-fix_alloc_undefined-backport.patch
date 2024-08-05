@@ -1,0 +1,14 @@
+
+--- src/cairo-colr-glyph-render.c	2024-08-05 16:30:47.755734800 -0700
++++ src/cairo-colr-glyph-render.c	2024-08-05 16:33:26.882644200 -0700
+@@ -43,6 +43,10 @@
+ #include <stdio.h>
+ #include <string.h>
+ 
++#ifdef _MSC_VER
++#include <malloc.h>
++#endif
++
+ #if HAVE_FT_COLR_V1
+ 
+ #include <ft2build.h>
