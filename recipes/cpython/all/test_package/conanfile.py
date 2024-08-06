@@ -95,21 +95,23 @@ class TestPackageConan(ConanFile):
             os.environ["DISTUTILS_USE_SDK"] = "1"
             os.environ["MSSdk"] = "1"
             setup_args = [
-                os.path.join(self.source_folder, "setup.py"),
+                "setup.py",
                 "build",
                 "--build-base", self.build_folder,
                 "--build-platlib", os.path.join(self.build_folder, "lib_setuptools"),
-                # Bandaid fix: setuptools places temporary files in a subdirectory of the build folder where the
-                # entirety of the absolute path up to this folder is appended (with seemingly no way to stop this),
-                # essentially doubling the path length. This may run into Windows max path lengths, so we give ourselves
-                # a little bit of wiggle room by making this directory name as short as possible. One of the directory
-                # names goes from (for example) "temp.win-amd64-3.10-pydebug" to "t", saving us roughly 25 characters.
-                "--build-temp", "t",
+                # Bandaid fix: The default temp directory looks something like "temp.win-amd64-3.10-pydebug
+                # here we use "t" to help us avoid hitting Windows max path length limits.
+                "--build-temp", os.path.join(self.build_folder, "t"),
             ]
             if self.settings.build_type == "Debug":
                 setup_args.append("--debug")
             args = " ".join(f'"{a}"' for a in setup_args)
-            self.run(f"{self._python} {args}")
+            # Run the setup script from the source folder so that we can keep output
+            # file paths as short as possible. These paths are derived from the
+            # path to the source files so running in the source folder allows us to
+            # achieve the shortest possible output paths. The --build-xxx options above
+            # ensure that all the build outputs end up in the build folder.
+            self.run(f"{self._python} {args}", cwd=self.source_folder)
 
     def _test_module(self, module, should_work):
         try:
