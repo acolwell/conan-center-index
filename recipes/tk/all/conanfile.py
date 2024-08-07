@@ -58,7 +58,7 @@ class TkConan(ConanFile):
             f"tcl/{self.version}", transitive_headers=True, transitive_libs=True
         )
         if self.settings.os == "Linux":
-            self.requires("fontconfig/2.13.93")
+            self.requires("fontconfig/2.15.0")
             self.requires("xorg/system")
 
     @property
